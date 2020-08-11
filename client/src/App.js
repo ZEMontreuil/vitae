@@ -8,7 +8,6 @@ import cvItemObject from './cvItemObject';
 import CVItem from './CVItem';
 
 // === MODAL STUFF
-
 const customStyles = {
   content : {
     top                   : '50%',
@@ -19,6 +18,8 @@ const customStyles = {
     transform             : 'translate(-50%, -50%)'
   }
 };
+
+const apiUrl = 'http://localhost:9000/cvItems';
 
 Modal.setAppElement('#root');
 
@@ -35,6 +36,10 @@ class App extends Component {
         description: '',
       }
     }
+
+    // this is necessary for async methods, since they will not accept arrow functions directly
+    this.getCvList = this.getCvList.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
   }
 
   // GET Item index by ID
@@ -52,16 +57,7 @@ class App extends Component {
     this.setState({items: itemsCopy})
   }
 
-  // DELETE OBJECTS
 
-  handleDelete = (id) => {
-    const itemsCopy = this.state.items.slice();
-
-    const itemDeletionIndex = this.getItemIndex(id, itemsCopy);
-    itemsCopy.splice(itemDeletionIndex, 1);
-
-    this.setState({items: itemsCopy});
-  }
 
   // ADD OBJECTS W MODAL
 
@@ -99,7 +95,7 @@ class App extends Component {
   }
 
   async getCvList () {
-    let response = await fetch('http://localhost:9000/cvItems');
+    let response = await fetch(apiUrl);
     response = await response.json();
     
     return response;
@@ -117,15 +113,29 @@ class App extends Component {
     this.setState({items:itemList});
   }
 
+
+
+    // DELETE OBJECTS
+
+  async handleDelete (id) {
+    await fetch(apiUrl + '/itemId/' + id, {
+        method: 'DELETE'
+      });
+
+      // update the state with the CVList
+    this.getCvList();
+
+    // const itemsCopy = this.state.items.slice();
+
+    // const itemDeletionIndex = this.getItemIndex(id, itemsCopy);
+    // itemsCopy.splice(itemDeletionIndex, 1);
+
+    // this.setState({items: itemsCopy});
+  }
+
   render() {
     return (
       <div className='App' id='root'>
-        
-        {/* TEST MYSQL */}
-        <button onClick={this.getDBStuff}>
-          GET
-        </button>
-
         <Modal 
           isOpen={this.state.modalOpen}
           style={customStyles}
