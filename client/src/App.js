@@ -5,7 +5,6 @@ import './App.css';
 import TitleHeader from './TitleHeader';
 import Modal from 'react-modal';
 import cvItemObject from './cvItemObject';
-import CVItem from './CVItem';
 
 // === MODAL STUFF
 const customStyles = {
@@ -40,6 +39,7 @@ class App extends Component {
     // this is necessary for async methods, since they will not accept arrow functions directly
     this.getCvList = this.getCvList.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.updateItemList = this.updateItemList.bind(this);
   }
 
   // GET Item index by ID
@@ -72,28 +72,46 @@ class App extends Component {
     this.setState({modalFormValues: modalItems});
   }
 
-  addNewItem = () => {
-    let newCvItem = new cvItemObject(this.state.items.length, 
-      this.state.modalFormValues.name, 
-      this.state.modalFormValues.description);
-
-    const itemsCopy = this.state.items.slice();
-    itemsCopy.push(newCvItem);
-
-    this.setState({items: itemsCopy,
-      modalFormValues: {
-        name: '',
-        description: ''
-      }
+  async postNewItem (newItem) {
+    await fetch (apiUrl, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow',
+      referrerPolicy: 'no-referrer',
+      body: JSON.stringify(newItem)
     });
+
+    await this.updateItemList();
 
     this.closeModal();
   }
 
-  closeModal = () => {
-    this.setState({modalOpen: false});
+  addNewItem = () => {
+    let Title = this.state.modalFormValues.name;
+    let Description = this.state.modalFormValues.description;
+    
+    this.postNewItem({Title, Description});
+
+    this.setState({modalFormValues: {
+      name: '',
+      description: '',
+    }});
   }
 
+  closeModal = () => {
+    this.setState({modalOpen: false, 
+      modalFormValues: {
+        name: '',
+        description: '',
+    }});
+  }
+
+  // GET AND UPDATE CV ITEMS FROM API
   async getCvList () {
     let response = await fetch(apiUrl);
     response = await response.json();
@@ -101,36 +119,30 @@ class App extends Component {
     return response;
   }
 
-  async componentDidMount () {
-    let fetchedList = await this.getCvList();
-    
-    let itemList = [];
-
-    fetchedList.forEach(e => {
-      itemList.push(new cvItemObject(e['Id'], e['Title'], e['Description']));
-    });
-
-    this.setState({items:itemList});
+  componentDidMount = () => {
+    this.updateItemList();
   }
 
+  async updateItemList () {
+    let fetchedList = await this.getCvList();
+    let newList = [];
 
+    fetchedList.forEach(fetchedItem => {
+      newList.push(new cvItemObject(fetchedItem['Id'], 
+        fetchedItem['Title'], 
+        fetchedItem['Description']));
+    });
 
-    // DELETE OBJECTS
+    this.setState({items:newList});
+  }
 
+  // DELETE OBJECTS
   async handleDelete (id) {
     await fetch(apiUrl + '/itemId/' + id, {
-        method: 'DELETE'
-      });
+      method: 'DELETE'
+    });
 
-      // update the state with the CVList
-    this.getCvList();
-
-    // const itemsCopy = this.state.items.slice();
-
-    // const itemDeletionIndex = this.getItemIndex(id, itemsCopy);
-    // itemsCopy.splice(itemDeletionIndex, 1);
-
-    // this.setState({items: itemsCopy});
+    this.updateItemList();
   }
 
   render() {
