@@ -9,11 +9,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var cvItemsRouter = require('./routes/cvItems');
 
-const sql = require('./db');
-
 var app = express();
 
-// setup mysql connection
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

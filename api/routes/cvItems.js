@@ -3,7 +3,7 @@ var router = express.Router();
 const sql = require('../db');
 const { response, query } = require('express');
 
-/* GET home page. */
+// GET
 router.get('/', function(req, res, next) {
   sql.query('SELECT * FROM CVItems', (err, rows, fields) => {
     if(err) throw err;
@@ -13,6 +13,7 @@ router.get('/', function(req, res, next) {
   });
 });
 
+// DELETE
 router.delete('/itemId/:itemId/', (req, res, next) => {
   const {itemId} = req.params;
   const queryText = `DELETE FROM CVItems WHERE Id = ${parseInt(itemId)}`;
@@ -24,10 +25,8 @@ router.delete('/itemId/:itemId/', (req, res, next) => {
   res.sendStatus(200);
 });
 
-// FIX SQL QUERY
+// POST
 router.post('/', (req, res, next) => {
-  let body = req.body;
-
   sql.query("INSERT INTO CVItems (Title, Description) VALUES (?,?);",
     [req.body['Title'], 
     req.body['Description']],

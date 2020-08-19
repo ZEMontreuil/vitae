@@ -3,4 +3,6 @@ node_modules/
 api/node_modules/
 api/config/
 
+api/prisma/schema.prisma
+
 node_modules/
