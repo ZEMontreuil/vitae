@@ -3,39 +3,42 @@ var router = express.Router();
 const sql = require('../db');
 const { response, query } = require('express');
 
-// GET
-router.get('/', function(req, res, next) {
-  sql.query('SELECT * FROM CVItems', (err, rows, fields) => {
-    if(err) throw err;
+const { PrismaClient, prismaVersion } = require("@prisma/client");
 
-    res.status = 200;
-    res.json(rows);
-  });
+const prisma = new PrismaClient();
+
+//PRISMA GET
+router.get('/', async (req, res, next) => {
+  const allItems = await prisma.cVItems.findMany();
+
+  res.status = 200;
+  res.json(allItems);
 });
 
-// DELETE
-router.delete('/itemId/:itemId/', (req, res, next) => {
+// PRISMA DELETE
+router.delete('/itemId/:itemId/', async (req, res, next) => {
   const {itemId} = req.params;
-  const queryText = `DELETE FROM CVItems WHERE Id = ${parseInt(itemId)}`;
-
-  sql.query(queryText, (err, rows, fields) => {
-    if (err) throw err;
-  })
+  const item = await prisma.cVItems.delete({
+    where: {
+      Id: parseInt(itemId),
+    }
+  });
 
   res.sendStatus(200);
 });
 
-// POST
-router.post('/', (req, res, next) => {
-  sql.query("INSERT INTO CVItems (Title, Description) VALUES (?,?);",
-    [req.body['Title'], 
-    req.body['Description']],
-    
-    (err, rows, fields) => {
-    if (err) throw err;
-  })
+// PRISMA POST
+router.post('/', async (req, res, next) => {
+  const {Title, Description } = req.body;
+
+  await prisma.cVItems.create({
+    data: {
+      Title,
+      Description,
+    }
+  });
 
   res.sendStatus(200);
-})
+});
 
 module.exports = router;
