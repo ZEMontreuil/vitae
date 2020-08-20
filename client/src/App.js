@@ -1,28 +1,12 @@
 import React, { Component } from 'react';
 import CirriculumVitae from './CirriculumVitae';
-import InputForm from './InputForm';
 import './App.css';
 import TitleHeader from './TitleHeader';
-import Modal from 'react-modal';
+
+import ModalComponent from './ModalComponent';
 import cvItemObject from './cvItemObject';
 
-// === MODAL STUFF
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
-
 const apiUrl = 'http://localhost:9000/cvItems';
-
-Modal.setAppElement('#root');
-
-// END OF MODAL STUFF ===
 
 class App extends Component {
   constructor(props) {
@@ -57,10 +41,7 @@ class App extends Component {
     this.setState({items: itemsCopy})
   }
 
-
-
-  // ADD OBJECTS W MODAL
-
+  // ADD OBJECTS W MODAL and HANDLE MODAL BEHAVIOUR
   handleAddClick = () => {
     this.setState({modalOpen: true});
   }
@@ -115,10 +96,6 @@ class App extends Component {
     return response;
   }
 
-  componentDidMount = () => {
-    this.updateItemList();
-  }
-
   async updateItemList () {
     let fetchedList = await this.getCvList();
     let newList = [];
@@ -141,34 +118,34 @@ class App extends Component {
     this.updateItemList();
   }
 
+  // ONLOAD
+  componentDidMount = () => {
+    this.updateItemList();
+  }
+
   render() {
+    let modal;
+
+    if (this.state.modalOpen) {
+      modal = <ModalComponent 
+        label="Popup Menu for entering a new CV Item"
+        requestClose={this.closeModal}
+        headerText="Enter a new CV Item"
+
+        formValue={this.state.modalFormValues}
+        handleChange={this.handleModalFormChange}
+
+        handleSubmit={this.addNewItem}
+        handleExit={this.closeModal}
+      />
+    } else {
+      modal = '';
+    }
+
     return (
       <div className='App' id='root'>
-        <Modal 
-          isOpen={this.state.modalOpen}
-          style={customStyles}
-          contentLabel={"Popup menu for entering a new CV Item"}
-          onRequestClose={this.closeModal}
-        > 
-          <div className="modal-inner">
-            <h2>
-              Enter a New Item
-            </h2>
-
-            <InputForm 
-              modalFormValue={this.state.modalFormValues}
-              handleChange={this.handleModalFormChange}
-            />
-
-            <div className="buttons">
-              <button onClick={this.addNewItem}>Enter this Item</button>
-              <button onClick={this.closeModal}> X </button>
-            </div>
-          </div>
-        </Modal>
-
+        {modal}
         <TitleHeader />
-
         <CirriculumVitae 
           items={this.state.items} 
           handleDelete={this.handleDelete}
