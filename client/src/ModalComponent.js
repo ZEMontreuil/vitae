@@ -23,21 +23,19 @@ let ModalComponent = props => {
         contentLabel={props.label}
         onRequestClose={props.requestClose}
       > 
-        <div className="modal-inner">
-          <h2>
-            {props.headerText}
-          </h2>
 
-          <InputForm 
-            modalFormValue={props.formValue}
-            handleChange={props.handleChange}
-          />
+      <div className="modal-inner">
+        <h2>
+          {props.headerText}
+        </h2>
+        <span><button onClick={props.handleExit}> 
+          X 
+        </button></span>
 
-          <div className="buttons">
-            <button onClick={props.handleSubmit}>Submit</button>
-            <button onClick={props.handleExit}> X </button>
-          </div>
-        </div>
+        <InputForm 
+          handleSubmit = {props.handleSubmit}
+        />
+      </div>
     </Modal>
   );
 }  

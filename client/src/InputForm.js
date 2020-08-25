@@ -1,23 +1,34 @@
-import React from 'react';
+import React, {useState} from 'react';
 
 function InputForm (props) {
-  return (
-  <form className="modal">
-    <div>
-    <input placeholder="Name of Project" 
-      value={props.modalFormValue.name}
-      id="name" 
-      onChange={props.handleChange}/>
-    </div>
+  const [titleValue, setTitleValue] = useState('');
+  const [descriptionValue, setDescriptionValue] = useState('');
 
-    <div>
-      <textarea placeholder="Description of Project" 
-        value={props.modalFormValue.description}
-        id="description"
-        onChange={props.handleChange}
-        />
-    </div>
-  </form>
+  let handleSubmit = () => {
+    props.handleSubmit(titleValue, descriptionValue);
+  }
+
+  return (
+    <form className="modal">
+      <div>
+      <input placeholder='Title'
+        value={titleValue}
+        id="name" 
+        onChange={e => setTitleValue(e.target.value)}/>
+      </div>
+
+      <div>
+        <textarea placeholder='Description'
+          value={descriptionValue}
+          id="description"
+          onChange={e => setDescriptionValue(e.target.value)}/>
+      </div>
+
+      <div className="buttons">
+        <button onClick={handleSubmit}>Submit</button>
+      </div>
+
+    </form>
   );
 }
 

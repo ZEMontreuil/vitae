@@ -14,10 +14,6 @@ class App extends Component {
     this.state = {
       items: [],
       modalOpen: false,
-      modalFormValues: {
-        name: '',
-        description: '',
-      }
     }
 
     // this is necessary for async methods, since they will not accept arrow functions directly
@@ -46,13 +42,6 @@ class App extends Component {
     this.setState({modalOpen: true});
   }
 
-  handleModalFormChange = (event) => {
-    let modalItems = this.state.modalFormValues;
-    modalItems[event.target.id] = event.target.value;
-
-    this.setState({modalFormValues: modalItems});
-  }
-
   async postNewItem (newItem) {
     await fetch (apiUrl, {
       method: 'POST',
@@ -68,17 +57,11 @@ class App extends Component {
     this.closeModal();
   }
 
-  addNewItem = () => {
-    let Title = this.state.modalFormValues.name;
-    let Description = this.state.modalFormValues.description;
-    
-    this.postNewItem({Title, Description});
-
-    this.setState({modalFormValues: {
-      name: '',
-      description: '',
-    }});
-  }
+  addNewItem = (newTitle, newDescription) => {
+    this.postNewItem({Title: newTitle, Description: newDescription});
+    this.closeModal();
+  };
+  
 
   closeModal = () => {
     this.setState({modalOpen: false, 
@@ -128,12 +111,9 @@ class App extends Component {
 
     if (this.state.modalOpen) {
       modal = <ModalComponent 
-        label="Popup Menu for entering a new CV Item"
+        label="Popup Menu for entering a CV Item"
         requestClose={this.closeModal}
-        headerText="Enter a new CV Item"
-
-        formValue={this.state.modalFormValues}
-        handleChange={this.handleModalFormChange}
+        headerText="CV Item"
 
         handleSubmit={this.addNewItem}
         handleExit={this.closeModal}
