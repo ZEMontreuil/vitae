@@ -13,7 +13,9 @@ class App extends Component {
     super(props);
     this.state = {
       items: [],
-      modalOpen: false,
+      addModalOpen: false,
+      editModalOpen: false,
+      currentlyEditing: 0,
     }
 
     // this is necessary for async methods, since they will not accept arrow functions directly
@@ -39,7 +41,11 @@ class App extends Component {
 
   // ADD OBJECTS W MODAL and HANDLE MODAL BEHAVIOUR
   handleAddClick = () => {
-    this.setState({modalOpen: true});
+    this.setState({addModalOpen: true});
+  }
+
+  handleEditClick = id => {
+    this.setState({editModalOpen : true, currentlyEditing: id});
   }
 
   async postNewItem (newItem) {
@@ -64,14 +70,9 @@ class App extends Component {
   
 
   closeModal = () => {
-    this.setState({modalOpen: false, 
-      modalFormValues: {
-        name: '',
-        description: '',
-    }});
+    this.setState({addModalOpen: false, editModalOpen: false, currentlyEditing: 0});
   }
 
-  // GET AND UPDATE CV ITEMS FROM API
   async getCvList () {
     let response = await fetch(apiUrl);
     response = await response.json();
@@ -109,16 +110,28 @@ class App extends Component {
   render() {
     let modal;
 
-    if (this.state.modalOpen) {
+    if (this.state.addModalOpen) {
       modal = <ModalComponent 
         label="Popup Menu for entering a CV Item"
         requestClose={this.closeModal}
-        headerText="CV Item"
+        headerText="Create New CV Item"
 
         handleSubmit={this.addNewItem}
         handleExit={this.closeModal}
       />
-    } else {
+    } else if (this.state.editModalOpen) {
+      modal = <ModalComponent 
+      label="Popup Menu for editing a CV Item"
+      requestClose={this.closeModal}
+      headerText="Edit CV Item"
+      
+      // change to editing item
+      editingItem={this.state.items.find(i => i.id === this.state.currentlyEditing)}
+      handleSubmit={this.addNewItem}
+      handleExit={this.closeModal}
+    />
+    }
+    else {
       modal = '';
     }
 
@@ -128,6 +141,7 @@ class App extends Component {
         <TitleHeader />
         <CirriculumVitae 
           items={this.state.items} 
+          handleEditClick={this.handleEditClick}
           handleDelete={this.handleDelete}
           handleDescriptionClick={this.toggleDescription}  
         />

@@ -3,7 +3,6 @@ import React from 'react';
 function CVItem (props) {
   let {title, description, descriptionOpened} = props.item;
 
-  // toggle cvitem desc
   let descriptionContentRendering;
 
   if (descriptionOpened) {
@@ -37,6 +36,7 @@ function CVItem (props) {
               {descriptionContentRendering}
             </div>
         </span>
+        <button onClick={props.handleEdit}>Edit</button>
         <button onClick={props.handleDelete}>X</button>
       </li>
     </div>

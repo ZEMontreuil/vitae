@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import InputForm from './InputForm';
 import Modal from 'react-modal';
 
@@ -16,6 +16,19 @@ let ModalComponent = props => {
     }
   };
 
+  let inputFormComponent;
+
+  if (!props.editingItem) {
+    inputFormComponent = <InputForm 
+      handleSubmit = {props.handleSubmit}
+    />
+  } else {
+    inputFormComponent = <InputForm
+      handleSubmit = {props.handleSubmit}
+      editingItem = {props.editingItem}
+    />
+  }
+
   return (
     <Modal 
         isOpen={true}
@@ -32,9 +45,7 @@ let ModalComponent = props => {
           X 
         </button></span>
 
-        <InputForm 
-          handleSubmit = {props.handleSubmit}
-        />
+        {inputFormComponent}
       </div>
     </Modal>
   );

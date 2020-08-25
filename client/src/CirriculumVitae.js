@@ -9,7 +9,9 @@ function CirriculumVitae(props) {
           return <CVItem 
             item={i} key={i.id} 
             handleDelete={() => props.handleDelete(i.id)}
-            handleDescriptionClick={() => props.handleDescriptionClick(i.id)}/>
+            handleDescriptionClick={() => props.handleDescriptionClick(i.id)}
+            handleEdit={() => props.handleEditClick(i.id)}
+          />
         })}
       </ul>
     </div>

@@ -1,8 +1,18 @@
 import React, {useState} from 'react';
 
 function InputForm (props) {
-  const [titleValue, setTitleValue] = useState('');
-  const [descriptionValue, setDescriptionValue] = useState('');
+  let newTitleValue = '';
+  let newDescriptionValue = '';
+  
+  if (props.editingItem) {
+    newTitleValue = props.editingItem['title'];
+    newDescriptionValue = props.editingItem['description'];
+  }
+
+  console.log(newTitleValue);
+
+  const [titleValue, setTitleValue] = useState(newTitleValue);
+  const [descriptionValue, setDescriptionValue] = useState(newDescriptionValue);
 
   let handleSubmit = () => {
     props.handleSubmit(titleValue, descriptionValue);
