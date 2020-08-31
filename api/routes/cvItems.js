@@ -27,6 +27,24 @@ router.delete('/itemId/:itemId/', async (req, res, next) => {
   res.sendStatus(200);
 });
 
+// PRISMA PATCH
+router.patch('/itemId/:itemId/', async (req, res, next) => {
+  const {itemId} = req.params;
+  const {Title, Description} = req.body;
+
+  const item = await prisma.cVItems.update({
+    where: { Id: parseInt(itemId)},
+    data: {
+      Title,
+      Description,
+    },
+  });
+
+  res.status(200);
+  res.json(item);
+});
+
+
 // PRISMA POST
 router.post('/', async (req, res, next) => {
   const {Title, Description } = req.body;

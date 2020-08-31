@@ -40,12 +40,12 @@ class App extends Component {
   }
 
   // ADD OBJECTS W MODAL and HANDLE MODAL BEHAVIOUR
+
+
+
+  // === POST AN ITEM
   handleAddClick = () => {
     this.setState({addModalOpen: true});
-  }
-
-  handleEditClick = id => {
-    this.setState({editModalOpen : true, currentlyEditing: id});
   }
 
   async postNewItem (newItem) {
@@ -59,7 +59,6 @@ class App extends Component {
     });
 
     await this.updateItemList();
-
     this.closeModal();
   }
 
@@ -67,6 +66,30 @@ class App extends Component {
     this.postNewItem({Title: newTitle, Description: newDescription});
     this.closeModal();
   };
+
+  // === EDIT AN ITEM ===
+
+  handleEditClick = id => {
+    this.setState({editModalOpen : true, currentlyEditing: id});
+  }
+
+  async requestEditItem (itemId, newItem) {
+    await fetch(`${apiUrl}/itemId/${itemId}`, {
+      method: `PATCH`,
+      mode: `cors`,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newItem)
+    });
+
+    await this.updateItemList();
+    this.closeModal();
+  }
+
+  editItem = (newTitle, newDescription) => {
+    this.requestEditItem(this.state.currentlyEditing, {Title: newTitle, Description: newDescription});
+  }
   
 
   closeModal = () => {
@@ -127,7 +150,7 @@ class App extends Component {
       
       // change to editing item
       editingItem={this.state.items.find(i => i.id === this.state.currentlyEditing)}
-      handleSubmit={this.addNewItem}
+      handleSubmit={this.editItem}
       handleExit={this.closeModal}
     />
     }
