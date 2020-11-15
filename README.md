@@ -7,9 +7,13 @@ project continues to grow, mutate, and hopefully become fully sentient.
 
 Currently, the App uses a MySQL database to store information sent and received by an Express server API. This API works with the React front end to handle basic CRUD functionality.
 
-The main features planned for the future are individual user accounts and a refactor of the front end to employ Hooks, and deploy to a cloud service to allow for proper, persistent use.
-
 I also used this project as the basis for teaching collaboration and some new full-stack technologies for early software development students at the Manitoba Institute of Trades and Technologies.
+
+## Planned Features
+- Refactor of client to employ Hooks
+- Individual user accounts and authentication
+- Deployment to a cloud service
+
 
 ## Installation and Use
 After downloading and installing packages, connect to your MySQL database with a new API/.env file with the following format:
