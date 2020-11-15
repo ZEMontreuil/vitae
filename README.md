@@ -7,7 +7,8 @@ project continues to grow, mutate, and hopefully become fully sentient.
 
 Currently, the App uses a MySQL database to store information sent and received by an Express server API. This API works with the React front end to handle basic CRUD functionality.
 
-I also used this project as the basis for teaching collaboration and some new full-stack technologies for early software development students at the Manitoba Institute of Trades and Technologies.
+I also used this project as the basis for teaching collaboration and some new full-stack technologies for early software development students at the Manitoba Institute of Trades and Technologies. The relevant document can be found here: https://docs.google.com/document/d/1ICm_q8bAzRQ0m7emc30jKNuHY_fzIaG-cXZ9kLFy8M0/edit?usp=sharing
+
 
 ## Planned Features
 - Refactor of client to employ Hooks
