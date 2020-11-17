@@ -11,6 +11,7 @@ I also used this project as the basis for teaching collaboration and some new fu
 
 
 ## Planned Features
+- Containerized in Docker to use as an actual CV
 - Refactor of client to employ Hooks
 - Individual user accounts and authentication
 - Deployment to a cloud service
