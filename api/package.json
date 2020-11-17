@@ -8,7 +8,7 @@
     "serverstart": "DEBUG=api:* npm run devstart"
   },
   "dependencies": {
-    "@prisma/client": "^2.5.0",
+    "@prisma/client": "^2.11.0",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "dotenv": "^8.2.0",
@@ -19,8 +19,8 @@
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.4.1",
+    "@prisma/cli": "^2.11.0",
     "cors": "^2.8.5",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.6"
   }
 }
